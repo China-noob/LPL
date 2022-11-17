@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image
-from car import predict
+from max import predict,process_image
 import time
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
@@ -9,7 +9,7 @@ st.write("")
 st.write("")
 option = st.selectbox(
      'Choose the model you want to use?',
-     ('resnet18','resnet50'))
+     ('resnet50', 'other'))
 ""
 
 file_up = st.file_uploader("Upload an image", type="jpg")
@@ -20,7 +20,8 @@ if file_up is None:
     st.image(image, caption='Uploaded Image.', use_column_width=True)
     st.write("")
     st.write("Just a second...")
-    labels= predict( option,file_up)
+    img=process_image(file_up)
+    labels= predict(img)
 
     # print out the top 5 prediction labels with scores
     st.success('successful prediction')
@@ -32,25 +33,14 @@ if file_up is None:
 
 
 else:
-#     if option=='resnet18':
-#         image = Image.open(file_up)
-#         st.image(image, caption='Uploaded Image.', use_column_width=True)
-#         st.write("")
-#         st.write("Just a second...")
-#         labels= predict( option,file_up)
-#         # print out the top 5 prediction labels with scores
-#         st.success('successful prediction')
-
-#         st.write("Prediction ", labels)
-
-
-#         st.write("")
     if option == 'resnet50':
         image = Image.open(file_up)
         st.image(image, caption='Uploaded Image.', use_column_width=True)
         st.write("")
         st.write("Just a second...")
-        labels = predict(option, file_up)
+
+        img = process_image(file_up)
+        labels = predict(img)
         # print out the top 5 prediction labels with scores
         st.success('successful prediction')
 

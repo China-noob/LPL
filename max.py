@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 import numpy as np
 import torch
@@ -7,13 +7,14 @@ import torch.optim as optim
 import torchvision
 
 from torchvision import transforms, models, datasets
-import imageio
-import time
-import warnings
-import random
-import sys
-import copy
-import json
+from torchvision.models import resnet50
+#import imageio
+#import time
+#import warnings
+#import random
+#import sys
+#import copy
+#import json
 from PIL import Image
 def process_image(image_path):
     re_size = 512
@@ -29,10 +30,18 @@ def process_image(image_path):
     img = Image.open(image_path)
     k = test_transform (img)
     return k
+
+
 def predict(process_image):
-    model = torch.load('max_acc.pth')
+    model = resnet50(
+        pretrained=True
+    )  # to use more models, see https://pytorch.org/vision/stable/models.html
+    model.fc = nn.Linear(
+        model.fc.in_features, 196
+    )  # set fc layer of model with exact class number of current dataset
+    model.load_state_dict(torch.load('max_acc.pth'))
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
+    model.to(device)
     model.eval()
     img = process_image.to(device)
     img = img.unsqueeze(0)
@@ -40,14 +49,13 @@ def predict(process_image):
     output = model(img)
     _, preds_tensor = torch.max(output, 1)
 
-    file = open('./label.txt')
-    dataMat = {}
+    file = open('./label-Copy1.txt')
+    dataMat = []
+
     for line in file.readlines():
-        # print(line)
-        curLine = line.strip().split(" ")
-        # print(curLine)
-        dataMat[curLine[0]] = curLine[1]
+        dataMat.append(line)
 
     label_index = preds_tensor.cpu().numpy()
-    print(dataMat[str(label_index[0] + 1)])
-    return dataMat[str(label_index[0] + 1)]
+    print(label_index)
+    print(dataMat[label_index[0]])
+    return dataMat[label_index[0]]

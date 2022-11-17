@@ -32,14 +32,8 @@ def process_image(image_path):
     return k
 
 
-def predict(process_image):
-    model = resnet50(
-        pretrained=True
-    )  # to use more models, see https://pytorch.org/vision/stable/models.html
-    model.fc = nn.Linear(
-        model.fc.in_features, 196
-    )  # set fc layer of model with exact class number of current dataset
-    model.load_state_dict(torch.load('max_acc.pth'))
+def predict(model,process_image):
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()

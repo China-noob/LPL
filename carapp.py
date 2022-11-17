@@ -2,6 +2,16 @@ import streamlit as st
 from PIL import Image
 from max import predict,process_image
 import time
+from torchvision.models import resnet50
+import torch
+from torch import nn
+model = resnet50(
+    pretrained=True
+)  # to use more models, see https://pytorch.org/vision/stable/models.html
+model.fc = nn.Linear(
+    model.fc.in_features, 196
+)  # set fc layer of model with exact class number of current dataset
+model.load_state_dict(torch.load('max_acc.pth'))
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 st.title("Car Simple Image Classification App")
@@ -21,7 +31,7 @@ if file_up is None:
     st.write("")
     st.write("Just a second...")
     img=process_image(file_up)
-    labels= predict(img)
+    labels= predict(model,img)
 
     # print out the top 5 prediction labels with scores
     st.success('successful prediction')
@@ -40,7 +50,7 @@ else:
         st.write("Just a second...")
 
         img = process_image(file_up)
-        labels = predict(img)
+        labels = predict(model,img)
         # print out the top 5 prediction labels with scores
         st.success('successful prediction')
 

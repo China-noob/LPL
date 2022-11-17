@@ -11,7 +11,7 @@ model = resnet50(
 model.fc = nn.Linear(
     model.fc.in_features, 196
 )  # set fc layer of model with exact class number of current dataset
-model.load_state_dict(torch.load('max_acc.pth'))
+model.load_state_dict(torch.load('max_acc.pth'),map_location='cpu')
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 st.title("Car Simple Image Classification App")

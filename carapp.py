@@ -32,19 +32,19 @@ if file_up is None:
 
 
 else:
-    if option=='resnet18':
-        image = Image.open(file_up)
-        st.image(image, caption='Uploaded Image.', use_column_width=True)
-        st.write("")
-        st.write("Just a second...")
-        labels= predict( option,file_up)
-        # print out the top 5 prediction labels with scores
-        st.success('successful prediction')
+#     if option=='resnet18':
+#         image = Image.open(file_up)
+#         st.image(image, caption='Uploaded Image.', use_column_width=True)
+#         st.write("")
+#         st.write("Just a second...")
+#         labels= predict( option,file_up)
+#         # print out the top 5 prediction labels with scores
+#         st.success('successful prediction')
 
-        st.write("Prediction ", labels)
+#         st.write("Prediction ", labels)
 
 
-        st.write("")
+#         st.write("")
     if option == 'resnet50':
         image = Image.open(file_up)
         st.image(image, caption='Uploaded Image.', use_column_width=True)
